@@ -1,0 +1,25 @@
+{
+  "name": "tensorflow-js-playground",
+  "version": "1.0.0",
+  "description": "Playground project to play with TensorFlow.js (https://www.tensorflow.org/js/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "watchify index.js -v -o build/client.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laskolaskov/tensorflow-js-playground.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/laskolaskov/tensorflow-js-playground/issues"
+  },
+  "homepage": "https://github.com/laskolaskov/tensorflow-js-playground#readme",
+  "dependencies": {
+    "@tensorflow/tfjs": "^1.7.0",
+    "p5": "^1.0.0"
+  }
+}
