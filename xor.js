@@ -69,7 +69,7 @@ const xor = (p) => {
         p.createCanvas(400, 400)
         p.background(51)
 
-        const res = 10
+        const res = 40
 
         const inputData = []
 
@@ -90,17 +90,21 @@ const xor = (p) => {
 
         const prediction = model.predict(tf.tensor2d(inputData))
         const result = prediction.dataSync()
-        
+
         let index = 0
         for (let i = 0; i < p.width / res; i++) {
             for (let j = 0; j < p.height / res; j++) {
-                p.fill(p.map(result[index], 0, 1, 0, 255))
+                let br = p.map(result[index], 0, 1, 0, 255)
+                p.fill(br)
                 //p.fill(result[index] * 255)
                 p.rect(i * res, j * res, res, res)
+                p.fill(255 - br)
+                p.textSize(res / 5)
+                p.textAlign(p.CENTER, p.CENTER)
+                p.text(p.nf(result[index], 1, 3), i * res + res / 2, j * res + res / 2)
                 index++
             }
         }
-
 
         p.noLoop()
     }
