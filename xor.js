@@ -1,6 +1,6 @@
 const tf = require('@tensorflow/tfjs')
 
-const xor = async (p) => {
+const xor = (p) => {
 
     const learningRate = 5
     const totalEpochs = 1000
@@ -47,33 +47,63 @@ const xor = async (p) => {
         optimizer: sgdOpt
     })
 
-    console.log(model)
+    const train = async () => {
+        console.log('Training started')
+        const history = await model.fit(inputs, xorTable, {
+            epochs: totalEpochs,
+            callbacks: {
+                onEpochEnd: (epoch, logs) => {
+                    if (epoch % 10 === 0) {
+                        console.log(`Epoch ${epoch} ended !`)
+                        console.log(logs)
+                    }
+                }
+            },
+            shuffle: true
+        })
+        console.log('Training ended')
+        console.log('training history :: ', history)
+    }
 
-    const history = await model.fit(inputs, xorTable, {
-        epochs: totalEpochs,
-        callbacks: {
-            onEpochEnd: (epoch, logs) => {
-                console.log(`Epoch ${epoch} ended !`)
-                console.log(logs)
+    p.setup = async () => {
+        p.createCanvas(400, 400)
+        p.background(51)
+
+        const res = 10
+
+        const inputData = []
+
+        for (let i = 0; i < p.width / res; i++) {
+            for (let j = 0; j < p.height / res; j++) {
+                x = p.map(i * res, 0, p.width, 0, 1)
+                y = p.map(j * res, 0, p.height, 0, 1)
+                inputData.push([x, y])
             }
-        },
-        shuffle: true
-    })
-    console.log(history)
+        }
 
-    inputs.print()
-    xorTable.print()
-    model.predict(inputs).print()
+        await train()
 
-    p.setup = () => {
+        console.log('Verification:')
+        inputs.print()
+        xorTable.print()
+        model.predict(inputs).print()
+
+        const prediction = model.predict(tf.tensor2d(inputData))
+        const result = prediction.dataSync()
+        
+        let index = 0
+        for (let i = 0; i < p.width / res; i++) {
+            for (let j = 0; j < p.height / res; j++) {
+                p.fill(p.map(result[index], 0, 1, 0, 255))
+                //p.fill(result[index] * 255)
+                p.rect(i * res, j * res, res, res)
+                index++
+            }
+        }
 
 
+        p.noLoop()
     }
-
-    p.draw = () => {
-
-    }
-
 }
 
 module.exports = xor
